@@ -3,7 +3,7 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
- jobs:
+jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
@@ -14,14 +14,20 @@ on:
           username: ${{ vars.secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       -  
-          name: Set up QEMU
-          uses: docker/setup-qemu-action@v3
-        
-          name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v2
+        name: Set up QEMU # make all go well base on any OS
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
       -
         name: Build and push
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: thomasyus/boardgame:${{github.sha}} ## github.sha is the commit ID
+          tags: |
+            thomasyus/demo-java:v1
+            thomasyus/boardgame:${{github.sha}}
+            user/app:${{ github.run_number }}
+          
+          
+          ## github.sha is the commit ID and REF_NAME branch namecd ..
